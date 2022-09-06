@@ -1,0 +1,57 @@
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    private Animator _animator;
+    private Goblin _goblin;
+    private float _damage;
+    private float _recharge;
+    private float _startRecharge;
+    [SerializeField] private Transform _attackPoint;
+    [SerializeField] private float _attackRadius;
+    [SerializeField] private WeaponData _weapon;
+    private void Start()
+    {
+        _animator = GetComponent<Animator>();
+        _goblin = FindObjectOfType<Goblin>();
+        _damage = _weapon.damage;
+        _startRecharge = _weapon.startRecharge;
+        _recharge = _startRecharge;
+    }
+    private void Update()
+    {
+        _recharge -= Time.deltaTime;
+        Attack(_goblin);
+    }
+    private void Attack(IDamageble goblin)
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _recharge <= 0)
+        {
+            Transform _goblinTransform;
+            _recharge = _startRecharge;
+            if(_goblin != null)
+            {
+                _goblinTransform = _goblin.transform;
+            }
+            else
+            {
+                _goblin = FindObjectOfType<Goblin>();
+                if (_goblin == null)
+                {
+                    _animator.SetTrigger("Attack");
+                }
+                _goblinTransform = _goblin.transform;
+            }
+            _animator.SetTrigger("Attack");
+            if (Vector2.Distance(_attackPoint.position, _goblinTransform.position) <= _attackRadius)
+            {
+                goblin.ApplyDamage(_damage);
+            }
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(_attackPoint.position, _attackRadius);
+    }
+}
