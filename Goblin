@@ -1,0 +1,22 @@
+using UnityEngine;
+
+public class Goblin : MonoBehaviour, IDamageble
+{
+    private float _hp;
+    private Animator _animator;
+    [SerializeField] private float _maxHp;
+    private void Start()
+    {
+        _animator = GetComponent<Animator>();
+        _hp = _maxHp;
+    }
+    public void ApplyDamage(float damage)
+    {
+        _hp -= damage;
+        _animator.SetTrigger("Hit");
+        if (_hp <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
