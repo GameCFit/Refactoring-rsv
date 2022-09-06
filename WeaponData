@@ -1,0 +1,10 @@
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "WeaponData", menuName = "WeaponData")]
+public class WeaponData : ScriptableObject
+{
+    [SerializeField] private float _damage;
+    [SerializeField] private float _startRecharge;
+    public float damage => this._damage;
+    public float startRecharge => this._startRecharge;
+}
