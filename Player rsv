@@ -1,0 +1,42 @@
+using System;
+using UnityEngine;
+
+[RequireComponent(typeof(Animator))]
+public class Player : MonoBehaviour {
+    static private string attackTriggerName = "Attack";
+
+    [SerializeField] private float attackCooldown = 0.1f;
+    [SerializeField] private Goblin aimator;
+    
+    private float timeToNextAttack = 0f;
+    private Animator selfAnimator;
+
+    private void Awake() {
+        selfAnimator = GetComponent<Animator>();
+    }
+
+    [Serializable] private class Staff {
+        [SerializeField] private float _damage;
+        public void Use(IDamagable aimator) {
+            if (aimator != null) {
+                aimator.ApplyDamage(_damage);
+            }
+        }
+    }
+
+    [SerializeField] private Staff weapon;
+
+    private void Attack() {
+        selfAnimator.SetTrigger(attackTriggerName);
+        weapon.Use(aimator);
+        timeToNextAttack = attackCooldown;
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Space) && timeToNextAttack <= 0) {
+            Attack();
+        }
+
+        timeToNextAttack -= Time.deltaTime;
+    }
+}
