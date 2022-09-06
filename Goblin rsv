@@ -1,0 +1,32 @@
+using UnityEngine;
+
+[RequireComponent(typeof(Animator))]
+public class Goblin : MonoBehaviour, IDamagable {
+
+    static private string hitTriggerName = "Hit";
+
+    [SerializeField] private float hp = 0f;
+    private Animator selfAnimator;
+
+    private void Awake() {
+        selfAnimator = GetComponent<Animator>();
+    }
+
+    public void ApplyDamage(float damage) {
+
+        if (damage < 0) {
+            hp += damage;
+        }
+        selfAnimator.SetTrigger(hitTriggerName);
+    }
+
+    public void onHitAnimationEnd() {
+        if (hp <= 0) {
+            Kill();
+        }
+    }
+
+    private void Kill() {
+        Destroy(gameObject);
+    }
+}
